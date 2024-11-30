@@ -1,12 +1,14 @@
 ## Java Leaflet
+### Forked from https://github.com/makbn/java_leaflet
+
 Java wrapper for Leaflet, JavaScript library for mobile-friendly interactive maps.
 
-*  Current version: **v1.9.4**
+*  Current version: **v1.9.5**
 * Previous version: [v1..6.0](https://github.com/makbn/java_leaflet/tree/release/1.6.0)
 
-Project Source Code: https://github.com/makbn/java_leaflet
+Project Source Code: https://github.com/GaetanRAYNAUD/java_leaflet
 
-![Java-Leaflet Test](https://github.com/makbn/java_leaflet/blob/master/.github/doc/app.png?raw=true)
+![Java-Leaflet Test](https://github.com/GaetanRAYNAUD/java_leaflet/blob/master/.github/doc/app.png?raw=true)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmakbn%2Fjava_leaflet.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmakbn%2Fjava_leaflet?ref=badge_shield)
 
 > Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. Weighing just about 38 KB of JS, it has all the mapping features most > developers ever need.
