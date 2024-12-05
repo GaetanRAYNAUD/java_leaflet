@@ -26,20 +26,26 @@ public class JLProperties {
 
     public static final double START_ANIMATION_RADIUS = 10;
 
-    public record MapType(String name, Set<JLMapOption.Parameter> parameters) {
+    public record MapType(String name, int tileSize, Set<JLMapOption.Parameter> parameters) {
 
-        public static final MapType OSM_MAPNIK = new MapType("OpenStreetMap.Mapnik");
-
-        public static final MapType OSM_HOT = new MapType("OpenStreetMap.HOT");
-
-        public static final MapType OPEN_TOPO = new MapType("OpenTopoMap");
+        public static final MapType OSM = new MapType("https://tile.openstreetmap.org/{z}/{x}/{y}.png");
 
         public MapType(String name) {
-            this(name, Collections.emptySet());
+            this(name, 256);
+        }
+
+        public MapType(String name, int tileSize) {
+            this(name, tileSize, Collections.emptySet());
+        }
+
+        public MapType(String name, int tileSize, Set<JLMapOption.Parameter> parameters) {
+            this.name = name.replace("https://", "https//").replace("http://", "http//");
+            this.tileSize = tileSize;
+            this.parameters = parameters;
         }
 
         public static MapType getDefault() {
-            return OSM_MAPNIK;
+            return OSM;
         }
     }
 }

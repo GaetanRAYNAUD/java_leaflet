@@ -126,7 +126,16 @@
 
           const jlFeatureGroup = L.featureGroup().addTo(jlmap);
 
-          L.tileLayer.provider(urlParams.get('mapid')).addTo(jlmap);
+          let layer = urlParams.get('mapid');
+          if (layer.startsWith('https//')) {
+            layer = 'https:' + layer.substring(5);
+          } else if (layer.startsWith('http//')) {
+            layer = 'http:' + layer.substring(4);
+          }
+
+          console.log(layer);
+
+          L.tileLayer(layer, { tileSize: urlParams.get('tileSize')}).addTo(jlmap);
 
           function addGeoJson(variableName) {
             return geoJsons.push(L.geoJson(JSON.parse(window[variableName])).addTo(jlmap)) - 1;

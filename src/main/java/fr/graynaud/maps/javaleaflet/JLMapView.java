@@ -55,6 +55,8 @@ public class JLMapView extends JLMapController {
 
     private OnJLMapViewListener mapListener;
 
+    private final JavaBridge bridge = new JavaBridge();
+
     public JLMapView(JLProperties.MapType mapType, JLLatLng startCoordinate, boolean showZoomController) {
         super(new JLMapOption(startCoordinate, mapType, Set.of(new JLMapOption.Parameter("zoomControl", Objects.toString(showZoomController)))));
         this.webView = new WebView();
@@ -95,14 +97,23 @@ public class JLMapView extends JLMapController {
             }
         });
 
+        this.webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            JSObject window = (JSObject) this.webView.getEngine().executeScript("window");
+            window.setMember("java", bridge);
+            this.webView.getEngine().executeScript("""
+                                                           console.log = function(message)
+                                                           {
+                                                               java.log(message);
+                                                           };""");
+        });
+
         WebConsoleListener.setDefaultListener(
                 (view, message, lineNumber, sourceId) -> LOGGER.error(String.format(Locale.US, "sid: %s ln: %d m:%s", sourceId, lineNumber, message)));
 
         Path tmpDirectory;
         Path tmpIndex = null;
-        try (InputStream index = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/index.html");
-             InputStream css = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.css");
-             InputStream js = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.js")) {
+        try (InputStream index = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/index.html"); InputStream css = getClass().getResourceAsStream(
+                "/fr/graynaud/maps/javaleaflet/leaflet.css"); InputStream js = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.js")) {
             tmpDirectory = Files.createTempDirectory("jlmap");
             tmpIndex = tmpDirectory.resolve("index.html");
             Files.copy(index, tmpIndex);
@@ -213,6 +224,13 @@ public class JLMapView extends JLMapController {
         protected void interpolate(double frac) {
             GaussianBlur eff = ((GaussianBlur) webView.getEffect());
             eff.setRadius(JLProperties.START_ANIMATION_RADIUS * (1 - frac));
+        }
+    }
+
+    public static class JavaBridge {
+
+        public void log(String text) {
+            LOGGER.info(text);
         }
     }
 }

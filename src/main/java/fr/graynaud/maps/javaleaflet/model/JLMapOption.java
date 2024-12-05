@@ -58,7 +58,8 @@ public class JLMapOption {
     public String toQueryString() {
         return Stream.concat(getParameters().stream(), this.additionalParameter.stream())
                      .map(Parameter::toString)
-                     .collect(Collectors.joining("&", String.format(Locale.US, "?mapid=%s&", getMapType().name()), ""));
+                     .collect(
+                             Collectors.joining("&", String.format(Locale.US, "?mapid=%s&tileSize=" + getMapType().tileSize() + "&", getMapType().name()), ""));
     }
 
     public JLLatLng getStartCoordinate() {

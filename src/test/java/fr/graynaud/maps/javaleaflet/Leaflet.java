@@ -31,7 +31,7 @@ public class Leaflet extends Application {
     @Override
     public void start(Stage stage) {
         //building a new map view
-        final JLMapView map = new JLMapView(JLProperties.MapType.OSM_MAPNIK, new JLLatLng(51.044, 114.07), true);
+        final JLMapView map = new JLMapView(JLProperties.MapType.OSM, new JLLatLng(51.044, 114.07), true);
         //creating a window
         AnchorPane root = new AnchorPane(map);
         root.setBackground(Background.EMPTY);
