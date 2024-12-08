@@ -182,6 +182,6 @@ public class JLBounds {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "[%s, %s]", northEast, southWest);
+        return String.format(Locale.US, "[%s,%s]", northEast, southWest);
     }
 }

@@ -8,6 +8,7 @@ import fr.graynaud.maps.javaleaflet.listener.event.Event;
 import fr.graynaud.maps.javaleaflet.listener.event.MoveEvent;
 import fr.graynaud.maps.javaleaflet.listener.event.ZoomEvent;
 import fr.graynaud.maps.javaleaflet.model.JLLatLng;
+import fr.graynaud.maps.javaleaflet.model.JLMapOption;
 import fr.graynaud.maps.javaleaflet.model.JLMarker;
 import fr.graynaud.maps.javaleaflet.model.JLOptions;
 import fr.graynaud.maps.javaleaflet.model.JLPolygon;
@@ -31,7 +32,7 @@ public class Leaflet extends Application {
     @Override
     public void start(Stage stage) {
         //building a new map view
-        final JLMapView map = new JLMapView(JLProperties.MapType.OSM, new JLLatLng(51.044, 114.07), true);
+        final JLMapView map = new JLMapView(new JLMapOption(new JLLatLng(51.044, 114.07), JLProperties.MapType.OSM, true));
         //creating a window
         AnchorPane root = new AnchorPane(map);
         root.setBackground(Background.EMPTY);

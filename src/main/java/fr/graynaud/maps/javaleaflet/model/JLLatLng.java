@@ -76,6 +76,6 @@ public record JLLatLng(double lat, double lng) {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "[%f, %f]", lat, lng);
+        return String.format(Locale.US, "[%f,%f]", lat, lng);
     }
 }

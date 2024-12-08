@@ -7,7 +7,6 @@ import fr.graynaud.maps.javaleaflet.layer.JLLayer;
 import fr.graynaud.maps.javaleaflet.layer.JLUiLayer;
 import fr.graynaud.maps.javaleaflet.layer.JLVectorLayer;
 import fr.graynaud.maps.javaleaflet.listener.OnJLMapViewListener;
-import fr.graynaud.maps.javaleaflet.model.JLLatLng;
 import fr.graynaud.maps.javaleaflet.model.JLMapOption;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -34,9 +33,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Mehdi Akbarian Rastaghi (@makbn)
@@ -57,8 +54,8 @@ public class JLMapView extends JLMapController {
 
     private final JavaBridge bridge = new JavaBridge();
 
-    public JLMapView(JLProperties.MapType mapType, JLLatLng startCoordinate, boolean showZoomController) {
-        super(new JLMapOption(startCoordinate, mapType, Set.of(new JLMapOption.Parameter("zoomControl", Objects.toString(showZoomController)))));
+    public JLMapView(JLMapOption jlMapOption) {
+        super(jlMapOption);
         this.webView = new WebView();
         this.jlMapCallbackHandler = new JLMapCallbackHandler(this);
         initialize();
@@ -88,10 +85,9 @@ public class JLMapView extends JLMapController {
                     this.webView.getEngine().executeScript("removeNativeAttr()");
                     addControllerToDocument();
 
-                    if (mapListener != null) {
+                    if (this.mapListener != null) {
                         this.mapListener.mapLoadedSuccessfully(this);
                     }
-
                 }
                 default -> setBlurEffectForMap();
             }
@@ -108,12 +104,13 @@ public class JLMapView extends JLMapController {
         });
 
         WebConsoleListener.setDefaultListener(
-                (view, message, lineNumber, sourceId) -> LOGGER.error(String.format(Locale.US, "sid: %s ln: %d m:%s", sourceId, lineNumber, message)));
+                (view, message, lineNumber, sourceId) -> LOGGER.error(String.format(Locale.US, "ln: %d m:%s", lineNumber, message)));
 
         Path tmpDirectory;
         Path tmpIndex = null;
-        try (InputStream index = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/index.html"); InputStream css = getClass().getResourceAsStream(
-                "/fr/graynaud/maps/javaleaflet/leaflet.css"); InputStream js = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.js")) {
+        try (InputStream index = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/index.html");
+             InputStream css = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.css");
+             InputStream js = getClass().getResourceAsStream("/fr/graynaud/maps/javaleaflet/leaflet.js")) {
             tmpDirectory = Files.createTempDirectory("jlmap");
             tmpIndex = tmpDirectory.resolve("index.html");
             Files.copy(index, tmpIndex);
@@ -191,9 +188,8 @@ public class JLMapView extends JLMapController {
 
     @Override
     protected void addControllerToDocument() {
-        JSObject window = (JSObject) this.webView.getEngine().executeScript("window");
-
         if (!this.controllerAdded) {
+            JSObject window = (JSObject) this.webView.getEngine().executeScript("window");
             window.setMember("app", this.jlMapCallbackHandler);
             LOGGER.debug("controller added to js scripts");
             this.controllerAdded = true;
@@ -216,7 +212,7 @@ public class JLMapView extends JLMapController {
 
         public MapTransition(WebView webView) {
             this.webView = webView;
-            setCycleDuration(Duration.millis(2000));
+            setCycleDuration(Duration.millis(1000));
             setInterpolator(Interpolator.EASE_IN);
         }
 

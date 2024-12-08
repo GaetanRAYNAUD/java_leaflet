@@ -45,7 +45,7 @@ class JLBoundsTest implements ModelTest {
     void testToString() {
         JLBounds bounds = new JLBounds(new JLLatLng(10, 10), new JLLatLng(40, 60));
 
-        assertEquals("[[10.000000, 10.000000], [40.000000, 60.000000]]", bounds.toString());
+        assertEquals("[[10.000000,10.000000],[40.000000,60.000000]]", bounds.toString());
     }
 
     @Test
